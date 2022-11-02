@@ -19,5 +19,8 @@
     "husky": "^8.0.1",
     "prettier": "^2.7.1",
     "typescript": "*"
+  },
+  "dependencies": {
+    "fastify": "^4.9.2"
   }
 }
