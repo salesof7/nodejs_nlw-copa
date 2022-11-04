@@ -3,7 +3,7 @@ version: '3.7'
 services:
   database:
     image: postgres
-    container_name: copadb
+    container_name: copa_database
     restart: always
     ports:
       - 5432:5432
@@ -13,7 +13,19 @@ services:
       - POSTGRES_DB=copadb
     volumes:
       - pgdata:/data/postgres
+  app:
+      build: .
+      container_name: copa_server
+      ports:
+        - 3333:3333
+      volumes:
+        - .:/usr/app
+      links:
+        - database
+      depends_on:
+        - database
 
 volumes:
   pgdata:
     driver: local
+
