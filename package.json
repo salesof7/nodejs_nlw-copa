@@ -4,6 +4,9 @@
   "main": "index.js",
   "author": "salesof7 <jpsaless2002@gmail.com>",
   "license": "MIT",
+  "prisma": {
+    "seed": "ts-node-dev prisma/seed.ts"
+  },
   "scripts": {
     "dev": "ts-node-dev src/server.ts"
   },
