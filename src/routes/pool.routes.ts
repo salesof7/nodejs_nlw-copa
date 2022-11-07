@@ -50,7 +50,7 @@ export async function poolRoutes(fastify: FastifyInstance) {
   });
 
   fastify.post(
-    "/pools/:id/join",
+    "/pools/join",
     {
       onRequest: [ensureAuthenticate],
     },
@@ -59,7 +59,7 @@ export async function poolRoutes(fastify: FastifyInstance) {
         code: z.string(),
       });
 
-      const { code } = joinPoolBody.parse(request.params);
+      const { code } = joinPoolBody.parse(request.body);
 
       const pool = await prisma.pool.findUnique({
         where: {
@@ -149,6 +149,52 @@ export async function poolRoutes(fastify: FastifyInstance) {
       });
 
       return { pools };
+    }
+  );
+
+  fastify.get(
+    "/pools/:id",
+    {
+      onRequest: [ensureAuthenticate],
+    },
+    async (request) => {
+      const getPoolParams = z.object({
+        id: z.string(),
+      });
+
+      const { id } = getPoolParams.parse(request.params);
+
+      const pool = await prisma.pool.findUnique({
+        where: {
+          id,
+        },
+        include: {
+          _count: {
+            select: {
+              participants: true,
+            },
+          },
+          participants: {
+            select: {
+              id: true,
+              user: {
+                select: {
+                  avatarUrl: true,
+                },
+              },
+            },
+            take: 4,
+          },
+          owner: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
+
+      return { pool };
     }
   );
 }
